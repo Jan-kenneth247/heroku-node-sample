@@ -1,5 +1,10 @@
 <!doctype html>
 <html>
+<script src="https://fonts.googleapis.com/css?family=Bowlby+One+SC"></script> ;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
 
 <head>
     <title>Socket.IO chat</title>
@@ -12,10 +17,11 @@
         
         body {
             font: 13px Helvetica, Arial;
+            background-color: lightskyblue
         }
         
         form {
-            background: #000;
+            background: rgb(54, 111, 235);
             padding: 3px;
             position: fixed;
             bottom: 0;
@@ -31,32 +37,304 @@
         
         form button {
             width: 9%;
-            background: rgb(130, 224, 255);
+            background: rgb(138, 255, 42);
             border: none;
             padding: 10px;
         }
         
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        /* Full-width input fields */
+        
+        input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        /* Set a style for all buttons */
+        
+        #button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
         }
         
-        #messages li {
-            padding: 5px 10px;
+        button:hover {
+            opacity: 0.8;
+        }
+        /* Extra styles for the cancel button */
+        /* Center the image and position the close button */
+        
+        .imgcontainer {
+            text-align: center;
+            margin: 10px 0 12px 0;
+            position: static;
         }
         
-        #messages li:nth-child(odd) {
-            background: #eee;
+        img.avatar {
+            width: 40%;
+            border-radius: 50%;
+        }
+        
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+        /* The Modal (background) */
+        
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+            padding-top: 60px;
+        }
+        /* Modal Content/Box */
+        
+        .modal-content {
+            background-color: #5bfafa;
+            margin: 5% auto 15% auto;
+            /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            width: 80%;
+            margin-left: 100px;
+            /* Could be more or less, depending on screen size */
+        }
+        /* Add Zoom Animation */
+        
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s
+        }
+        
+        @-webkit-keyframes animatezoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+        
+        @keyframes animatezoom {
+            from {
+                transform: scale(0)
+            }
+            to {
+                transform: scale(1)
+            }
+        }
+        /* Change styles for span and cancel button on extra small screens */
+        
+        @media screen and (max-width: 300px) {
+            span.psw {
+                display: block;
+                float: none;
+            }
+            .cancelbtn {
+                width: 100%;
+            }
+        }
+        
+        header {
+            background-color: yellow;
+        }
+        
+        header.sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            padding: 50px;
+            width: 100%;
+            font-size: 20px;
+            position: absolute;
+        }
+        /* the glowing effects in header */
+        
+        .glow {
+            font-size: 80px;
+            color: blue;
+            text-align: center;
+            -webkit-animation: glow 1s ease-in-out infinite alternate;
+            -moz-animation: glow 1s ease-in-out infinite alternate;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+        
+        @-webkit-keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgb(89, 168, 241), 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+            }
+        }
+        
+        li {
+            color: red;
+            background-color: lightgrey;
+            font-size: 200%;
+            margin: 5%;
+        }
+        /* my style of the user interface */
+        
+        #headline {
+            background-color: green;
+            color: white;
+            margin-bottom: 0px;
+            position: absolute;
+            text-align: center;
+        }
+        
+        #a {
+            margin-top: 0px;
+            margin-right: 0px;
+        }
+        
+        .p2 {
+            color: white;
+            padding: 20px 30px 30px 20px;
+            text-align: justify;
+            border: solid;
+            margin: 10px 0px 40px;
+            position: absolute;
+            font-size: 2.5vw;
+            border-radius: 45%;
+            background-color: blue;
+            right: 10px;
+            float: right;
+            margin-top: 250px;
+        }
+        
+        .p3 {
+            color: white;
+            padding: 20px 30px 30px 20px;
+            text-align: justify;
+            border: solid;
+            margin: 10px 0px 40px;
+            position: absolute;
+            font-size: 2.5vw;
+            border-radius: 45%;
+            background-color: red;
+            float: left;
+            margin-top: 250px;
         }
     </style>
 </head>
 
-<body>
-    <ul id="messages"></ul>
+<body onload="document.getElementById('id01').style.display='block'" style="width:auto;">
+    <header class="sticky">
+        <a id="a" href="file:///C:/Users/2ndyrGroupA/Desktop/socket.io/login.html" class="btn btn-info btn-lg">
+            <span class="glyphicon glyphicon-log-out"></span> Log out
+        </a>
+
+        <h1 class="glow">Tsat! tsat!</h1>
+        <div id="headline">
+            <p></p>
+        </div>
+        <ul id="messages"></ul>
+
+        <br>
+
+    </header>
+    <div id="div">
+
+    </div>
+    <div id="id01" class="modal">
+
+        <form class="modal-content animate" action="/action_page.php">
+            <div class="imgcontainer">
+                <img src="https://preview.redd.it/b9u586tq1nz11.jpg?width=768&auto=webp&s=36f81bbb886f8234ee6123088930cada98983711" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="container">
+                <label for="uname"><b>Username</b></label><br>
+                <input id="un" type="text" placeholder="Enter Username" name="uname" required>
+
+
+                <button id="button" onclick="document.getElementById('id01').style.display='none'" type="submit">Login</button>
+
+            </div>
+
+        </form>
+    </div>
+
     <form action="">
-        <input id="m" autocomplete="off" /><button>Send</button>
+        <input id="m" autocomplete="off" /><button id="send">Send</button>
     </form>
+    <script>
+        $(function() {
+            var socket = io();
+            var modal = document.getElementById('id01');
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            $('form').submit(function(e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('active', $('#un').val());
+                socket.emit('chat message', $("#un").val(), $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+
+            socket.on('chat message', function(username, msg) {
+                if (username === $('#un').val()) {
+                    $('#send').click(function() {
+                        $('#div').append("<p class='p2'>" + $('#un').val() + ' : ' + $('#m').val() + "</p><br><br><br><br><br><br><br>")
+                    });
+                } else {
+                    $('#div').append($('<p class="p3">').text(msg))
+                }
+
+            });
+
+
+
+        });
+        // if ($('#un').val() != socket.socket('active', username)) {
+        //     socket.on('chat message', username, message);
+        //     $('#div').append(username + " : " + message);
+        // };
+        // $(document).ready(function() {
+        $('#button').click(function() {
+            $('#headline').append("Hey " + $('#un').val() + ", You are now online!");
+
+
+        });
+
+        // var i = 25;
+        // var b = i;
+        // var txt = "";
+        // txt += b + "px";
+        // $('p').css("bottom", txt);
+        // b += 25;
+
+
+        // });
+    </script>
+
 </body>
 
 </html>
